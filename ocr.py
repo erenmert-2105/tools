@@ -115,13 +115,19 @@ if mode ==str(2):
             text1= pytesseract.image_to_string(im1, lang='tur')
             
             
+            try:
+                text = re.findall(r'\d+\.\d+|\d+,\d+|\d+', text)
+                text = np.char.replace(text, ",", ".")
+                text=np.array(text)
+            except :
+                continue
             
-            text = re.findall(r'\d+\.\d+|\d+,\d+|\d+', text)
+                    
+            
             text1 = text1.split("\n")
-            text1 = [item for item in text1 if item != '']
+            text1 = [item for item in text1 if item != '']        
             
-            text=np.array(text)
-            text = np.char.replace(text, ",", ".")
+            
             text1=np.array(text1)
             
             try:
@@ -131,7 +137,7 @@ if mode ==str(2):
                 writer.save()
                 print("successful !")
             except Exception as e:
-                print("Error,  something went wrong, probably resolution not fit:", e)
+                print("Error,  something went wrong, probably resolution not fit, error code :", e)
             finally:
                 inpt = input("Do you wanna continue yes(1), no(2) ")
                 while True:
@@ -192,7 +198,7 @@ elif mode == str(1):
                 writer.save()
                 print("successful !")
             except Exception as e:
-                print("Error,  something went wrong:", e)
+                print("Error,  something went wrong, error code :", e)
             finally:
                 inpt = input("Do you wanna continue yes(1), no(2) ")
                 while True:
