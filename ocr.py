@@ -64,7 +64,7 @@ mode = input("plese chose mode_1(1) or mode_2(2) ")
 if mode ==str(2):
     while True:
         prb=0
-        print("select areas with pressing key s and mause over location, please point count collumn then name collumn")
+        print("select areas with pressing key s and mause over location")
         
         a,b=get_loc(key_code)   
         #print(a,b)
@@ -107,6 +107,8 @@ if mode ==str(2):
             im = np.array(im) 
             im1 = np.array(im1)
                 
+            pytesseract.pytesseract.tesseract_cmd = 'C:/Users/meren/AppData/Local/Programs/Tesseract-OCR/tesseract.exe'
+            custom_oem_psm_config = r'--oem 3 --psm 4'
             
             
             # Open the image and perform OCR on it
@@ -117,27 +119,22 @@ if mode ==str(2):
             
             try:
                 text = re.findall(r'\d+\.\d+|\d+,\d+|\d+', text)
-                text = np.char.replace(text, ",", ".")
+                text1 = text1.split("\n")
+                text1 = [item for item in text1 if item != '']
+                
                 text=np.array(text)
-            except :
-                continue
-            
-                    
-            
-            text1 = text1.split("\n")
-            text1 = [item for item in text1 if item != '']        
-            
-            
-            text1=np.array(text1)
+                text1=np.array(text1)
+            except:
+                pass
             
             try:
                 df = pd.DataFrame({'Names': text1, 'Numbers': text})
                 writer = pd.ExcelWriter(current_path+'/my_list.xlsx', engine='xlsxwriter')
                 df.to_excel(writer, index=False, sheet_name='Sheet1')
                 writer.save()
-                print("successful !")
+                print("successful!")
             except Exception as e:
-                print("Error,  something went wrong, probably resolution not fit, error code :", e)
+                print("Error,  something went wrong:", e)
             finally:
                 inpt = input("Do you wanna continue yes(1), no(2) ")
                 while True:
